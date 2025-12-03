@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Mobile Homepage</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use the specified fonts -->
+    <style>
+        /* Including Roboto for the menu */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Nunito:wght@200..1000&family=Roboto:wght@400;700&display=swap');
+        body {
+            font-family: 'Nunito', sans-serif; /* Body typo Nunito */
+            scroll-behavior: smooth;
+            background-color: #0d0d0d; /* Black/Dark Grey */
+        }
+        /* Custom classes for specific fonts */
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .font-roboto {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        /* Custom styles for the animated sandwich menu */
+        .hamburger-menu {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 2rem;
+            height: 2rem;
+            cursor: pointer;
+            z-index: 50; /* Above everything */
+        }
+        .line {
+            width: 100%;
+            height: 3px;
+            /* Changed from white to a dark gray for contrast against silver header */
+            background-color: #1f2937; 
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+        .open .line:nth-child(1) {
+            transform: translateY(11.5px) rotate(45deg);
+        }
+        .open .line:nth-child(2) {
+            opacity: 0;
+        }
+        .open .line:nth-child(3) {
+            transform: translateY(-11.5px) rotate(-45deg);
+        }
+        /* Style for the fixed parallax content container */
+        .parallax-container {
+            height: calc(400vh); /* Total height for 4 sections */
+            position: relative;
+        }
+        .parallax-section {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            transition: background-color 0.5s;
+        }
+        .parallax-content {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: transform 0.0s, opacity 0.0s; /* Controlled by JS */
+            width: 100%;
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- Navbar & Menu Overlay -->
+    <!-- Updated background to Metallic Silver Hex A8A9AD -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#A8A9AD] shadow-lg p-4 flex justify-between items-center">
+        <!-- Logo Text Color changed to dark gray for contrast -->
+        <a href="#" class="text-2xl font-bold text-gray-900 font-montserrat">The Meyer</a>
+        <div class="hamburger-menu" id="hamburger-menu">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </header>
+
+    <!-- Full-Screen Menu Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-gray-900/95 flex flex-col justify-center items-center z-30 transition-opacity duration-500 opacity-0 pointer-events-none">
+        <nav class="space-y-6 text-center">
+            <!-- Updated menu links to use Roboto font -->
+            <a href="#" onclick="closeMenu()" class="text-4xl font-extrabold text-white hover:text-gray-300 transition block rounded-lg p-3 font-roboto">Home</a>
+            <a href="#about" onclick="closeMenu()" class="text-4xl font-extrabold text-white hover:text-gray-300 transition block rounded-lg p-3 font-roboto">About Us</a>
+            <a href="#contact" onclick="closeMenu()" class="text-4xl font-extrabold text-white hover:text-gray-300 transition block rounded-lg p-3 font-roboto">Contact</a>
+        </nav>
+    </div>
+
+    <!-- Main Parallax Content -->
+    <main class="parallax-container" id="parallax-container">
+
+        <!-- Parallax Section 1: Hair Pistol -->
+        <section class="parallax-section bg-[#1a1a1a]" data-index="0">
+            <div class="parallax-content text-center" data-speed="1.2">
+                <p class="text-6xl font-extrabold tracking-tighter text-white mb-4 font-montserrat">HAIR PISTOL</p>
+                <p class="text-lg text-gray-400 max-w-sm mx-auto">A unique approach to style and precision.</p>
+            </div>
+        </section>
+
+        <!-- Parallax Section 2: Title & Description -->
+        <section class="parallax-section bg-[#262626]" data-index="1">
+            <div class="parallax-content text-center max-w-2xl" data-speed="1.1">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 text-white font-montserrat">The Future is Here</h2>
+                <p class="text-xl text-gray-300 px-4">
+                    Discover cutting-edge services built on a foundation of reliability and modern design. We streamline complexities so you can focus on what matters most.
+                </p>
+            </div>
+        </section>
+
+        <!-- Parallax Section 3: Map -->
+        <section class="parallax-section bg-[#333333]" data-index="2">
+            <div class="parallax-content max-w-4xl w-full mx-auto" data-speed="1.05">
+                <h2 class="text-3xl font-bold mb-4 text-center font-montserrat">Find Our Location</h2>
+                <!-- Map Placeholder using a basic iframe/placeholder -->
+                <div class="w-full aspect-video rounded-xl shadow-2xl overflow-hidden border-4 border-gray-400">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.290351582264!2d-122.4194155!3d37.7749295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858064bd2b449b%3A0x639b7d41f71f65d6!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parallax Section 4: Icon Button & Text (Call to Action) -->
+        <section class="parallax-section bg-[#404040]" data-index="3" id="contact">
+            <div class="parallax-content text-center" data-speed="1.25">
+                <!-- Adjusted Icon color to gray -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-400">
+                    <path d="M12 2a10 10 0 0 0 7.39 17.58L12 22v-2a6 6 0 0 1-6-6h-2a10 10 0 0 0 16.7 5.6"></path>
+                    <path d="M12 22v-2a6 6 0 0 1-6-6h-2a10 10 0 0 0 7.39 17.58"></path>
+                    <path d="M14 2c-1.85 0-3.57.92-4.57 2.5-1 1.58-.8 3.5.57 4.57s3 .16 4.57-.57c1.58-1 2.5-2.72 2.5-4.57z"></path>
+                    <path d="M12 2a10 10 0 0 0 7.39 17.58L12 22v-2a6 6 0 0 1-6-6h-2a10 10 0 0 0 16.7 5.6"></path>
+                    <path d="M12 22v-2a6 6 0 0 1-6-6h-2a10 10 0 0 0 16.7 5.6"></path>
+                </svg>
+                <!-- Added Montserrat font -->
+                <h3 class="text-4xl font-bold mb-6 font-montserrat">Ready to Connect?</h3>
+                <!-- Button color set to white background and dark text -->
+                <button class="bg-white hover:bg-gray-200 text-gray-900 font-bold py-3 px-8 rounded-full shadow-xl transition transform hover:scale-105 active:scale-95 duration-200">
+                    Get Started Now
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-10 px-6 mt-[400vh] border-t border-gray-700" id="about">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & About -->
+            <div class="col-span-1 md:col-span-2 space-y-3">
+                <!-- Logo font and color -->
+                <div class="text-3xl font-extrabold text-white font-montserrat">The Meyer</div>
+                <p class="text-sm">Innovating since 2024, committed to excellence and customer satisfaction.</p>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="space-y-3">
+                <h4 class="font-semibold text-white mb-2">Contact Info</h4>
+                <p class="text-sm">
+                    <strong>Phone:</strong> <a href="tel:555-1234" class="hover:text-white transition">+1 (555) 123-4567</a>
+                </p>
+                <p class="text-sm">
+                    <strong>Email:</strong> <a href="mailto:info@brand.com" class="hover:text-white transition">info@brand.com</a>
+                </p>
+                <p class="text-sm">
+                    <strong>Address:</strong> 123 Innovation Drive, Metropolis, CA 90210
+                </p>
+            </div>
+        </div>
+
+        <!-- Legal Disclosure -->
+        <div class="mt-8 pt-4 border-t border-gray-700/50 text-center">
+            <p class="text-xs text-gray-500">
+                &copy; 2024 The Meyer. All rights reserved. | Legal disclosure: All trademarks and copyrights are the property of their respective owners. Content is for demonstration purposes only.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const sections = document.querySelectorAll('.parallax-section');
+            const container = document.getElementById('parallax-container');
+
+            // --- Menu Logic ---
+            hamburger.addEventListener('click', () => {
+                const isMenuOpen = hamburger.classList.contains('open');
+                if (isMenuOpen) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+
+            function openMenu() {
+                hamburger.classList.add('open');
+                menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.add('opacity-100', 'pointer-events-auto');
+                document.body.style.overflow = 'hidden'; // Disable background scrolling
+            }
+
+            window.closeMenu = function() { // Made global for onclick in HTML
+                hamburger.classList.remove('open');
+                menuOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+                menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = ''; // Re-enable background scrolling
+            }
+
+            // --- Parallax Scroll Logic ---
+            function updateParallax() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const totalHeight = container.offsetHeight;
+                
+                // Calculate which of the 4 full-screen slots the user is scrolling through
+                const currentSlot = Math.floor(scrollY / windowHeight);
+                const progressInSlot = (scrollY % windowHeight) / windowHeight; // 0 to 1
+
+                sections.forEach((section, index) => {
+                    const content = section.querySelector('.parallax-content');
+                    const speed = parseFloat(content.getAttribute('data-speed')) || 1.0;
+                    const contentHeight = content.offsetHeight;
+                    
+                    let opacity = 0;
+                    let translateY = 50;
+
+                    if (index === currentSlot) {
+                        // We are scrolling into the current section (0 to 1)
+                        opacity = 1 - Math.abs(progressInSlot * 2 - 1); // Fades in from 0 to 1, then out from 1 to 0
+                        translateY = progressInSlot * (windowHeight * (1 - speed)) + (50 * (1 - opacity));
+                    } else if (index === currentSlot + 1) {
+                        // We are scrolling out of the previous section and into this one (1 to 0)
+                        opacity = progressInSlot;
+                        translateY = (1 - progressInSlot) * 50; // Starts low, moves up
+                    } else if (index === currentSlot - 1) {
+                        // We are scrolling past this section (1 to 0)
+                        opacity = 1 - progressInSlot;
+                        translateY = progressInSlot * -50; // Moves up and out
+                    }
+
+                    // Ensure opacity is clamped between 0 and 1
+                    opacity = Math.max(0, Math.min(1, opacity));
+                    
+                    // Apply transformation
+                    content.style.opacity = opacity;
+                    content.style.transform = `translateY(${translateY}px)`;
+                    
+                    // Re-enable transition once the page is interactive
+                    if (scrollY > 10) {
+                        content.style.transition = 'transform 0.1s linear, opacity 0.1s linear';
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateParallax);
+            
+            // Initial call to set positions correctly on load
+            updateParallax();
+        });
+    </script>
+</body>
+</html>
