@@ -1,0 +1,29 @@
+/* Custom Scrollbar Styles */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(250, 235, 215, 0.05);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #C02F12;
+  border-radius: 10px;
+}
+
+/* Bamboo Animation */
+@keyframes bamboo-sway {
+  0% { transform: rotate(-1.5deg); }
+  100% { transform: rotate(1.5deg); }
+}
+
+.bamboo-stalk {
+  transform-origin: bottom center;
+  animation: bamboo-sway 8s ease-in-out infinite alternate;
+}
