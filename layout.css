@@ -17,7 +17,7 @@ body::before {
     position: fixed;
     inset: 0;
     /* Update this path to your bamboo/japanese pattern file */
-    background-image: url('/media/patterns/japanese_pattern.png'); 
+    background-image: url('media/posters/dynasties/Japanese_Wave_Pattern.svg'); 
     background-repeat: repeat;
     background-size: 300px; /* Adjust scale of the pattern */
     opacity: 0.05; /* Control the subtlety here (5% opacity) */
