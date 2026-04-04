@@ -1,237 +1,140 @@
 // App.js
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 
-// --- Data Models (Mock Data) ---
-const EPISODES = [
-  { id: 1, title: "The Iron Covenant", duration: "24m", ep: "S1:E1", imageStr: "Covenant" },
-  { id: 2, title: "Broken Zenith", duration: "25m", ep: "S1:E2", imageStr: "Zenith" },
-  { id: 3, title: "Protocol: Blood", duration: "22m", ep: "S1:E3", imageStr: "Protocol" },
-  { id: 4, title: "The Last Aegis", duration: "26m", ep: "S1:E4", imageStr: "Aegis" },
+const SERIES_PORTALS = [
+    {
+        id: 'dynasties',
+        title: 'Dynasties',
+        subtitle: 'A Legacy of Steel and Shadow. In a world where bloodlines define destiny, one warrior must reclaim a stolen throne before the darkness consumes the realm.',
+        image: '/media/posters/dynasties/AdmoniCity.png', 
+        path: '/pages/series/dynasties.html',
+        tags: ['Action', 'Historical', 'Epic'],
+        label: 'New Release',
+        kanji: '朝'
+    },
+    {
+        id: 'mictlan-2030',
+        title: 'Mictlan 2030',
+        subtitle: 'Where ancient shadows meet neon skylines. Explore the high-tech underworld of a futuristic empire rising from the ruins of the past.',
+        image: '/media/posters/dynasties/Tenochtitlan2030.png',
+        path: '#',
+        tags: ['Cyberpunk', 'Mythology', 'Thriller'],
+        label: 'In Production',
+        kanji: '死'
+    },
+    {
+        id: 'kyoto-noir',
+        title: 'Kyoto Noir',
+        subtitle: 'Rain Slicks and Neon Blades. In the neon-drenched streets of a future Kyoto, an underground syndicate faces a reckoning they never saw coming.',
+        image: '[https://images.unsplash.com/photo-1545156521-77bd85671d30?auto=format&fit=crop&q=80&w=2000](https://images.unsplash.com/photo-1545156521-77bd85671d30?auto=format&fit=crop&q=80&w=2000)',
+        path: '#',
+        tags: ['Cyberpunk', 'Thriller'],
+        label: 'Trending',
+        kanji: '闇'
+    }
 ];
 
-const SELECTED_SERIES = {
-  title: "Dynasties",
-  year: "2026",
-  rating: "18+",
-  genre: "Fantasy • Sci-fi • Blood",
-  description: "In moments of crisis, what will you do to save your people? As the Great Houses reach the brittle peak of their tolerance, a centuries-long peace begins to fracture under the weight of cosmic ambition and arcane greed. In a world where hyper-advanced technology meets primordial blood-magic, the risk of total war looms over every border. When the foundations of civilization start to crumble, leaders must decide if they will become the architects of a new era or the executioners of the old. Survival is no longer a right—it is a debt paid in blood.",
-  chapters: [
-    { id: 1, num: "01", title: "Peak of Tolerance", duration: "24:00" },
-    { id: 2, num: "02", title: "Fractured Zenith", duration: "23:45" },
-    { id: 3, num: "03", title: "Aether & Iron", duration: "24:12" },
-    { id: 4, num: "04", title: "The Blood Seal", duration: "23:58" },
-    { id: 5, num: "05", title: "Sovereign Debt", duration: "24:05" },
-    { id: 6, num: "06", title: "Horizon Ablaze", duration: "24:00" },
-  ]
-};
+const PortalRow = ({ series }) => {
+    const handleClick = () => {
+        if (series.path !== '#') {
+            window.location.href = series.path;
+        }
+    };
 
-const CAST = [
-  { id: 301, name: "Soren Valerius", role: "High Archon" },
-  { id: 302, name: "Lyra Thorne", role: "Blood-Tech Pilot" },
-  { id: 303, name: "Kaelen Voss", role: "Shadow Diplomat" },
-  { id: 304, name: "Elara Vance", role: "The Oracle" },
-  { id: 305, name: "General Malus", role: "Warmonger" },
-];
-
-// --- Subcomponents ---
-
-const Logo = ({ className }) => (
-  <div className={`flex items-center gap-3 ${className}`}>
-    <svg viewBox="0 0 64 64" fill="none" stroke="#C02F12" strokeWidth="2.5" className="w-10 h-10">
-      <path d="M16 28 C16 48 24 58 32 58 C40 58 48 48 48 28 C48 16 16 16 16 28 Z" strokeLinecap="round" />
-      <path d="M20 18 C18 10 10 6 6 10 C12 16 14 22 16 26" strokeLinecap="round" />
-      <path d="M44 18 C46 10 54 6 58 10 C52 16 50 22 48 26" strokeLinecap="round" />
-    </svg>
-    <h1 className="text-xl md:text-3xl font-serif font-bold text-[#FAEBD7] tracking-widest uppercase">
-      Toriku Films
-    </h1>
-  </div>
-);
-
-const BambooBackground = () => (
-  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-10 flex justify-around px-2">
-    {[...Array(8)].map((_, i) => (
-      <svg
-        key={i}
-        className="h-[120vh] -mt-[10vh] w-6 md:w-12 text-[#FAEBD7] bamboo-stalk"
-        style={{ 
-          animationDelay: `${i * 0.7}s`, 
-          opacity: Math.random() * 0.4 + 0.3,
-          display: i % 2 === 0 ? 'block' : 'none', 
-        }}
-        viewBox="0 0 20 100"
-        preserveAspectRatio="none"
-      >
-        <rect x="8" y="0" width="3" height="100" rx="1" fill="currentColor" />
-        <rect x="6" y="20" width="7" height="1.5" rx="1" fill="currentColor" />
-        <rect x="6" y="50" width="7" height="1.5" rx="1" fill="currentColor" />
-        <rect x="6" y="80" width="7" height="1.5" rx="1" fill="currentColor" />
-        <path d="M11 20 Q 16 15 14 8" stroke="currentColor" fill="none" strokeWidth="0.5" />
-        <path d="M9 50 Q 4 45 6 38" stroke="currentColor" fill="none" strokeWidth="0.5" />
-      </svg>
-    ))}
-  </div>
-);
-
-const SectionHeader = ({ title }) => (
-  <div className="flex items-center gap-3 mb-6">
-    <span className="w-1.5 h-6 bg-[#C02F12] rounded-full"></span>
-    <h2 className="text-xl md:text-2xl font-serif text-[#FAEBD7] tracking-wide">{title}</h2>
-  </div>
-);
-
-// --- Main Application ---
-
-export default function App() {
-  const episodesRef = useRef(null);
-
-  return (
-    <div className="min-h-screen bg-[#1A1C1F] text-[#FAEBD7] font-sans selection:bg-[#C02F12] selection:text-[#FFFFFF] relative overflow-x-hidden w-full">
-      <BambooBackground />
-      
-      {/* Navbar */}
-      <header className="absolute top-0 left-0 w-full flex items-center justify-between px-4 md:px-12 py-6 z-50 bg-gradient-to-b from-[#1A1C1F]/80 to-transparent">
-        <Logo className="cursor-pointer" />
-        <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-[#C02F12] border-2 border-[#FAEBD7] cursor-pointer shadow-lg shadow-[#C02F12]/20 hover:scale-105 transition-transform duration-200"></div>
-        </div>
-      </header>
-
-      <div className="relative z-10 flex flex-col min-h-screen w-full">
-        
-        {/* HERO SECTION */}
-        <div className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden">
-          <div className="absolute inset-0 bg-[#0a0a0b]">
-            <div 
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] hover:scale-110"
-              style={{ 
-                backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000')`,
-                mixBlendMode: 'luminosity',
-                opacity: 0.5
-              }}
-            />
-          </div>
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1C1F] via-[#1A1C1F]/40 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1C1F] via-transparent to-transparent hidden md:block"></div>
-          
-          <div className="absolute top-1/2 left-12 -translate-y-1/2 hidden lg:block opacity-10 pointer-events-none">
-             <span className="text-[12rem] font-serif font-black text-[#FAEBD7]">血</span>
-          </div>
-        </div>
-
-        <main className="flex-1 pb-16 px-4 md:px-12 space-y-20 -mt-32 md:-mt-64 relative z-20 w-full max-w-full">
-          
-          {/* Spotlight Section */}
-          <section className="relative w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              <div className="lg:col-span-7 space-y-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="px-2 py-0.5 bg-[#C02F12] text-white text-[10px] font-bold rounded uppercase tracking-tighter shadow-sm shadow-[#C02F12]/40">Upcoming Showcase</span>
-                    <span className="text-[#FAEBD7]/40 text-sm font-medium">{SELECTED_SERIES.year} • {SELECTED_SERIES.rating}</span>
-                  </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-7xl font-serif font-bold text-[#FFFFFF] leading-tight mb-4 tracking-tight drop-shadow-2xl">
-                    {SELECTED_SERIES.title}
-                  </h2>
-                  <p className="text-[#C02F12] text-sm md:text-lg font-medium mb-6 italic border-l-2 border-[#C02F12] pl-3">
-                    {SELECTED_SERIES.genre}
-                  </p>
-                  <p className="text-[#FAEBD7]/80 text-base md:text-xl leading-relaxed max-w-2xl font-light drop-shadow-sm">
-                    {SELECTED_SERIES.description}
-                  </p>
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <button className="px-8 py-3.5 bg-[#C02F12] text-white font-bold rounded-full hover:bg-[#FFFFFF] hover:text-[#1A1C1F] transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#C02F12]/30">
-                    Watch Teaser
-                  </button>
-                  <button className="p-3.5 border-2 border-[#FAEBD7]/20 rounded-full hover:border-[#FAEBD7] hover:bg-[#FAEBD7]/5 transition-all group text-[#FAEBD7]">
-                    <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform"><path d="M12 5v14M5 12h14"/></svg>
-                  </button>
-                </div>
-              </div>
-
-              {/* Chapter Index */}
-              <div className="lg:col-span-5 bg-[#FAEBD7]/5 border border-[#FAEBD7]/10 rounded-2xl p-6 md:p-8 backdrop-blur-md shadow-2xl">
-                <div className="flex justify-between items-center mb-6 border-b border-[#FAEBD7]/10 pb-4">
-                  <h3 className="text-[#FFFFFF] font-serif text-xl font-bold italic tracking-wide">Season 1 Manifest</h3>
-                  <span className="text-[#C02F12] text-xs font-mono uppercase tracking-widest bg-[#C02F12]/10 px-2 py-1 rounded">{SELECTED_SERIES.chapters.length} Parts</span>
+    return (
+        <div 
+            onClick={handleClick}
+            className="portal-row group relative w-full min-h-[50vh] md:min-h-[45vh] lg:min-h-[40vh] overflow-hidden cursor-pointer border-b border-[#FAEBD7]/10 bg-[#1A1C1F] flex items-center"
+        >
+            <div className="absolute inset-0 z-0">
+                <div 
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-[3000ms] group-hover:scale-110"
+                    style={{ backgroundImage: `url(${series.image})` }}
+                />
+                <div className="absolute inset-0 bg-[#1A1C1F]/60 group-hover:bg-[#1A1C1F]/30 transition-colors duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1A1C1F] via-[#1A1C1F]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A1C1F] via-transparent to-[#1A1C1F]/40" />
+            </div>
+            
+            <div className="relative z-20 w-full px-6 sm:px-12 md:px-24 py-24 md:py-32 flex flex-col justify-center">
+                <div className="flex flex-wrap items-center gap-3 mb-6 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-out">
+                    <span className="bg-[#C02F12] text-white text-[10px] md:text-xs font-black px-3 py-1 rounded-sm tracking-[0.2em] uppercase shadow-lg shadow-[#C02F12]/30">
+                        {series.label}
+                    </span>
+                    <div className="flex gap-4">
+                        {series.tags.map(tag => (
+                            <span key={tag} className="text-[#FAEBD7]/50 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] border-l border-[#FAEBD7]/20 pl-4">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
                 </div>
                 
-                <div className="space-y-1 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
-                  {SELECTED_SERIES.chapters.map((chapter) => (
-                    <div 
-                      key={chapter.id} 
-                      className="group flex items-center justify-between p-3.5 rounded-xl hover:bg-[#C02F12]/10 transition-all cursor-pointer border border-transparent hover:border-[#C02F12]/20"
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className="text-[#C02F12] font-mono text-xs opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">{chapter.num}</span>
-                        <span className="text-[#FAEBD7]/90 text-sm md:text-base font-medium group-hover:text-[#FFFFFF] transition-colors">{chapter.title}</span>
-                      </div>
-                      <span className="text-[#FAEBD7]/30 text-[10px] md:text-xs font-mono group-hover:text-[#FAEBD7]/60 transition-colors">{chapter.duration}</span>
-                    </div>
-                  ))}
+                <h2 className="text-5xl sm:text-7xl md:text-9xl font-black text-[#FAEBD7] mb-6 tracking-tighter transition-all duration-700 group-hover:text-white group-hover:translate-x-3">
+                    {series.title}
+                </h2>
+                
+                <p className="text-[#FAEBD7]/70 text-sm sm:text-lg md:text-xl font-light tracking-wide max-w-2xl transform translate-y-6 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 leading-relaxed">
+                    {series.subtitle}
+                </p>
+
+                <div className="mt-8 sm:hidden text-[#C02F12] text-[10px] font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 transition-opacity">
+                    Tap to Enter Realm
                 </div>
-              </div>
-
             </div>
-          </section>
 
-          {/* New Episodes */}
-          <section className="relative w-full overflow-hidden">
-            <SectionHeader title="Production Logs" />
-            <div className="relative group">
-              <div ref={episodesRef} className="flex gap-4 md:gap-6 overflow-x-auto hide-scrollbar snap-x pb-4">
-                {EPISODES.map((ep) => (
-                  <div key={ep.id} className="min-w-[280px] md:min-w-[420px] snap-start bg-[#1A1C1F]/60 border border-[#FAEBD7]/10 rounded-2xl overflow-hidden hover:border-[#C02F12]/60 transition-all duration-500 group/card shadow-xl">
-                    <div className="aspect-video relative bg-[#2A2C3F] flex items-center justify-center overflow-hidden">
-                      <span className="text-[#FAEBD7]/5 font-serif text-6xl font-bold uppercase select-none group-hover/card:scale-110 transition-transform duration-700">{ep.imageStr}</span>
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1A1C1F] to-transparent opacity-40 group-hover/card:opacity-20 transition-opacity"></div>
-                      <div className="absolute top-4 left-4 px-3 py-1 bg-[#C02F12]/90 backdrop-blur-md text-[10px] font-black text-white rounded-md shadow-lg">{ep.ep}</div>
+            <div className="absolute right-4 sm:right-12 md:right-32 top-1/2 -translate-y-1/2 opacity-[0.04] group-hover:opacity-[0.1] pointer-events-none transition-all duration-1000 select-none z-10">
+                <span className="text-[15rem] sm:text-[25rem] md:text-[35rem] font-bold text-[#FAEBD7] leading-none">
+                    {series.kanji}
+                </span>
+            </div>
+
+            <div className="absolute right-12 bottom-12 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-10 group-hover:translate-x-0 hidden md:block z-30">
+                <div className="flex items-center gap-6 text-[#C02F12]">
+                    <span className="text-xs font-black uppercase tracking-[0.5em]">Enter Realm</span>
+                    <div className="w-16 h-[1px] bg-[#C02F12]/50 group-hover:w-24 transition-all duration-700"></div>
+                    <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default function App() {
+    return (
+        <div className="min-h-screen bg-[#1A1C1F] w-full flex flex-col selection:bg-[#C02F12] selection:text-white">
+            <nav className="fixed top-0 left-0 w-full z-50 px-6 sm:px-10 py-6 sm:py-8 flex justify-between items-center bg-gradient-to-b from-[#1A1C1F] via-[#1A1C1F]/70 to-transparent">
+                <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#C02F12] rounded-full flex items-center justify-center shadow-2xl shadow-[#C02F12]/40 group-hover:scale-110 transition-transform">
+                        <span className="text-[#FAEBD7] font-black text-xl sm:text-2xl">T</span>
                     </div>
-                    <div className="p-5">
-                      <h3 className="text-[#FFFFFF] font-serif text-lg md:text-xl group-hover/card:text-[#C02F12] transition-colors duration-300">{ep.title}</h3>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[#FAEBD7]/40 text-xs font-mono">{ep.duration}</span>
-                        <span className="w-1 h-1 bg-[#C02F12] rounded-full"></span>
-                        <span className="text-[#FAEBD7]/40 text-xs uppercase tracking-tighter">4K • Atmos</span>
-                      </div>
+                    <div className="flex flex-col">
+                        <span className="text-[#FAEBD7] font-black tracking-[0.3em] uppercase text-xs sm:text-sm leading-none">Toriku Films</span>
+                        <span className="text-[#C02F12] text-[8px] font-black tracking-[0.5em] uppercase mt-1">Studio Selection</span>
                     </div>
-                  </div>
+                </div>
+            </nav>
+
+            <main className="flex-1 flex flex-col">
+                {SERIES_PORTALS.map(series => (
+                    <PortalRow key={series.id} series={series} />
                 ))}
-              </div>
-            </div>
-          </section>
+            </main>
 
-          {/* Cast Section */}
-          <section className="relative w-full overflow-hidden">
-            <SectionHeader title="The Council" />
-            <div className="flex gap-6 overflow-x-auto hide-scrollbar snap-x pb-4">
-              {CAST.map((person) => (
-                <div key={person.id} className="min-w-[130px] md:min-w-[180px] text-center snap-start group">
-                  <div className="aspect-square rounded-full bg-[#FAEBD7]/5 border-2 border-[#FAEBD7]/10 mb-4 overflow-hidden group-hover:border-[#C02F12] transition-all duration-500 relative shadow-2xl">
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-tr from-[#C02F12]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div className="w-full h-full flex items-center justify-center text-[#FAEBD7]/10 text-5xl font-serif select-none group-hover:scale-110 transition-transform duration-500">
-                      {person.name.charAt(0)}
+            <footer className="fixed bottom-0 left-0 w-full z-50 px-8 py-6 pointer-events-none flex justify-between items-end">
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-3">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span className="text-[#FAEBD7]/40 text-[9px] uppercase font-black tracking-[0.3em]">Vault Link Active</span>
                     </div>
-                  </div>
-                  <h4 className="text-[#FFFFFF] text-sm md:text-base font-semibold mb-1 group-hover:text-[#C02F12] transition-colors">{person.name}</h4>
-                  <p className="text-[#C02F12] text-[10px] md:text-xs uppercase font-black tracking-widest opacity-80">{person.role}</p>
                 </div>
-              ))}
-            </div>
-          </section>
-
-        </main>
-
-        <footer className="mt-auto border-t border-[#FAEBD7]/5 py-16 px-6 text-center bg-gradient-to-t from-black/20 to-transparent w-full">
-          <p className="text-[#FAEBD7]/20 text-[10px] tracking-[0.3em] uppercase font-bold">
-            &copy; {new Date().getFullYear()} Toriku Films • Dynasties Production Office
-          </p>
-        </footer>
-      </div>
-    </div>
-  );
+                <div className="pointer-events-auto hidden sm:block">
+                    <span className="text-[#FAEBD7]/20 text-[9px] uppercase tracking-[0.4em] font-black">Est. 2026 / Visual Narratives</span>
+                </div>
+            </footer>
+        </div>
+    );
 }
