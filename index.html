@@ -1,15 +1,18 @@
 import React from 'react';
 
 // --- Series Data ---
+// Note: We use the provided image for Dynasties. 
+// For Serafin and Kyoto Noir, we use high-quality dark thematic placeholders.
 const SERIES_PORTALS = [
   {
     id: 'dynasties',
     title: 'Dynasties',
     subtitle: 'A Legacy of Steel and Shadow',
-    image: 'https://images.unsplash.com/photo-1533109721025-d1ae2ee8c9eb?auto=format&fit=crop&q=80&w=2000', // Reference to the generated aesthetic
+    image: 'https://images.unsplash.com/photo-1533109721025-d1ae2ee8c9eb?auto=format&fit=crop&q=80&w=2000', 
     path: '/pages/series/dynasties.html',
     tags: ['Action', 'Historical', 'Epic'],
-    label: 'New Release'
+    label: 'New Release',
+    kanji: '朝'
   },
   {
     id: 'serafin',
@@ -18,7 +21,8 @@ const SERIES_PORTALS = [
     image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2000',
     path: '#',
     tags: ['Dark Fantasy', 'Mystery'],
-    label: 'Coming Soon'
+    label: 'Coming Soon',
+    kanji: '天'
   },
   {
     id: 'kyoto-noir',
@@ -27,13 +31,16 @@ const SERIES_PORTALS = [
     image: 'https://images.unsplash.com/photo-1545156521-77bd85671d30?auto=format&fit=crop&q=80&w=2000',
     path: '#',
     tags: ['Cyberpunk', 'Thriller'],
-    label: 'Trending'
+    label: 'Trending',
+    kanji: '闇'
   }
 ];
 
 const PortalRow = ({ series }) => {
   const handleClick = () => {
     if (series.path !== '#') {
+      // In this environment, we simulate the navigation
+      console.log(`Navigating to: ${series.path}`);
       window.location.href = series.path;
     }
   };
@@ -41,53 +48,62 @@ const PortalRow = ({ series }) => {
   return (
     <div 
       onClick={handleClick}
-      className="group relative w-full h-[30vh] md:h-[33.33vh] overflow-hidden cursor-pointer border-b border-[#FAEBD7]/10"
+      className="group relative w-full h-[33.33vh] overflow-hidden cursor-pointer border-b border-[#FAEBD7]/10 bg-[#1A1C1F]"
     >
-      {/* Background Image with Parallax-like hover */}
+      {/* Background Image with Slow Zoom on Hover */}
       <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-110"
         style={{ backgroundImage: `url(${series.image})` }}
       />
       
-      {/* Dynamic Overlays */}
-      <div className="absolute inset-0 bg-[#1A1C1F]/60 group-hover:bg-[#1A1C1F]/20 transition-colors duration-500" />
+      {/* Cinematic Overlays */}
+      {/* 1. Base Darkening */}
+      <div className="absolute inset-0 bg-[#1A1C1F]/50 group-hover:bg-[#1A1C1F]/20 transition-colors duration-700" />
+      {/* 2. Left-to-Right Gradient for Text Readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#1A1C1F] via-[#1A1C1F]/40 to-transparent" />
+      {/* 3. Bottom Vignette */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#1A1C1F]/80 via-transparent to-transparent" />
       
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-16 z-20">
-        <div className="flex items-center gap-3 mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-          <span className="bg-[#C02F12] text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-tighter uppercase">
+      {/* Content Layer */}
+      <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-20 z-20">
+        <div className="flex items-center gap-4 mb-3 transform translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out">
+          <span className="bg-[#C02F12] text-white text-[10px] md:text-xs font-black px-3 py-1 rounded-sm tracking-[0.2em] uppercase shadow-lg shadow-[#C02F12]/20">
             {series.label}
           </span>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             {series.tags.map(tag => (
-              <span key={tag} className="text-[#FAEBD7]/40 text-[10px] uppercase tracking-widest">{tag}</span>
+              <span key={tag} className="text-[#FAEBD7]/50 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] border-l border-[#FAEBD7]/20 pl-3">
+                {tag}
+              </span>
             ))}
           </div>
         </div>
         
-        <h2 className="text-5xl md:text-7xl font-serif font-black text-[#FAEBD7] mb-2 tracking-tighter transition-all duration-500 group-hover:text-white group-hover:pl-4">
+        <h2 className="text-6xl md:text-8xl font-serif font-black text-[#FAEBD7] mb-2 tracking-tighter transition-all duration-700 group-hover:text-white group-hover:translate-x-2">
           {series.title}
         </h2>
         
-        <p className="text-[#FAEBD7]/60 text-sm md:text-lg font-light tracking-wide max-w-md transform translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
+        <p className="text-[#FAEBD7]/70 text-sm md:text-xl font-light tracking-wide max-w-xl transform translate-y-4 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 leading-relaxed">
           {series.subtitle}
         </p>
       </div>
 
-      {/* Decorative Kanji/Icon for each row */}
-      <div className="absolute right-12 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none transition-opacity group-hover:opacity-10 duration-700">
-        <span className="text-[15rem] font-serif font-bold text-[#FAEBD7]">
-          {series.id === 'dynasties' ? '朝' : series.id === 'serafin' ? '天' : '闇'}
+      {/* Atmospheric Kanji Background Element */}
+      <div className="absolute right-10 md:right-24 top-1/2 -translate-y-1/2 opacity-[0.03] group-hover:opacity-[0.08] pointer-events-none transition-all duration-1000 select-none">
+        <span className="text-[20rem] md:text-[30rem] font-serif font-bold text-[#FAEBD7] leading-none">
+          {series.kanji}
         </span>
       </div>
 
-      {/* Hover Arrow */}
-      <div className="absolute right-8 bottom-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C02F12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
+      {/* Animated Call-to-Action Arrow */}
+      <div className="absolute right-12 bottom-12 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
+        <div className="flex items-center gap-4 text-[#C02F12]">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em]">Enter Realm</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
       </div>
     </div>
   );
@@ -95,39 +111,68 @@ const PortalRow = ({ series }) => {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#1A1C1F] overflow-x-hidden w-full flex flex-col">
+    <div className="min-h-screen bg-[#1A1C1F] overflow-hidden w-full flex flex-col selection:bg-[#C02F12] selection:text-white">
       <style>{`
-        @font-face {
-          font-family: 'Cinzel';
-          src: url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+        
+        body {
+          margin: 0;
+          padding: 0;
+          background: #1A1C1F;
         }
-        .font-serif { font-family: 'Cinzel', serif; }
+
+        .font-serif { 
+          font-family: 'Cinzel', serif; 
+        }
+
+        /* Prevents potential lateral scrolling from oversized kanji */
+        main {
+          overflow: hidden;
+        }
       `}</style>
 
-      {/* Persistent Navbar */}
-      <nav className="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-gradient-to-b from-[#1A1C1F] to-transparent">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#C02F12] rounded-full flex items-center justify-center">
-            <span className="text-[#FAEBD7] font-serif font-bold">T</span>
+      {/* High-Z Navbar */}
+      <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-gradient-to-b from-[#1A1C1F] via-[#1A1C1F]/60 to-transparent">
+        <div className="flex items-center gap-4 group cursor-pointer">
+          <div className="w-10 h-10 bg-[#C02F12] rounded-full flex items-center justify-center shadow-lg shadow-[#C02F12]/30 group-hover:scale-110 transition-transform">
+            <span className="text-[#FAEBD7] font-serif font-black text-xl">T</span>
           </div>
-          <span className="text-[#FAEBD7] font-serif font-bold tracking-[0.2em] uppercase text-sm">Toriku Films</span>
+          <div className="flex flex-col">
+            <span className="text-[#FAEBD7] font-serif font-black tracking-[0.3em] uppercase text-sm leading-none">Toriku Films</span>
+            <span className="text-[#C02F12] text-[8px] font-black tracking-[0.5em] uppercase mt-1">Studio Selection</span>
+          </div>
         </div>
-        <div className="w-8 h-8 rounded-full border border-[#FAEBD7]/20 flex items-center justify-center cursor-pointer hover:bg-[#FAEBD7]/5 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAEBD7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        
+        <div className="flex items-center gap-6">
+          <div className="w-10 h-10 rounded-full border border-[#FAEBD7]/10 flex items-center justify-center cursor-pointer hover:bg-[#FAEBD7]/5 hover:border-[#FAEBD7]/30 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAEBD7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+               <line x1="4" y1="12" x2="20" y2="12"></line>
+               <line x1="4" y1="6" x2="20" y2="6"></line>
+               <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+          </div>
         </div>
       </nav>
 
-      {/* Main Container for the 3 Rows */}
-      <main className="flex-1 flex flex-col pt-[72px]">
+      {/* Vertical Portal Stacking */}
+      <main className="flex-1 flex flex-col h-screen">
         {SERIES_PORTALS.map(series => (
           <PortalRow key={series.id} series={series} />
         ))}
       </main>
 
-      {/* Minimal Footer */}
-      <footer className="bg-[#1A1C1F] py-4 px-6 border-t border-[#FAEBD7]/5 flex justify-between items-center">
-        <span className="text-[#FAEBD7]/20 text-[10px] uppercase tracking-widest font-bold">Selection v1.0</span>
-        <span className="text-[#FAEBD7]/20 text-[10px] uppercase tracking-widest font-bold">&copy; 2026 Toriku</span>
+      {/* Floating Status / Footer Info */}
+      <footer className="fixed bottom-0 left-0 w-full z-50 px-8 py-4 pointer-events-none flex justify-between items-end">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-[#FAEBD7]/30 text-[10px] uppercase font-black tracking-widest">Server Online</span>
+          </div>
+          <span className="text-[#FAEBD7]/10 text-[8px] uppercase tracking-[0.4em] font-black italic">Archive / Tokyo / 2026</span>
+        </div>
+        <div className="pointer-events-auto">
+           <span className="text-[#FAEBD7]/20 text-[10px] uppercase tracking-widest font-black">&copy; Toriku Production House</span>
+        </div>
       </footer>
     </div>
   );
