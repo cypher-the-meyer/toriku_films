@@ -1,0 +1,31 @@
+/* layout.css */
+@import url('[https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap](https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap)');
+
+body { 
+    margin: 0; 
+    padding: 0; 
+    background: #1A1C1F; 
+    color: #FAEBD7; 
+    font-family: 'Cinzel', serif; 
+    overflow-x: hidden;
+}
+
+.font-serif { 
+    font-family: 'Cinzel', serif; 
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    background: #1A1C1F;
+}
+::-webkit-scrollbar-thumb {
+    background: #C02F12;
+    border-radius: 10px;
+}
