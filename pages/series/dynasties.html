@@ -36,13 +36,7 @@ const CAST = [
 
 const Logo = ({ className }) => (
   <div className={`flex items-center gap-3 ${className}`}>
-    <svg 
-      viewBox="0 0 64 64" 
-      fill="none" 
-      stroke="#C02F12" 
-      strokeWidth="2.5" 
-      className="w-10 h-10"
-    >
+    <svg viewBox="0 0 64 64" fill="none" stroke="#C02F12" strokeWidth="2.5" className="w-10 h-10">
       <path d="M16 28 C16 48 24 58 32 58 C40 58 48 48 48 28 C48 16 16 16 16 28 Z" strokeLinecap="round" />
       <path d="M20 18 C18 10 10 6 6 10 C12 16 14 22 16 26" strokeLinecap="round" />
       <path d="M44 18 C46 10 54 6 58 10 C52 16 50 22 48 26" strokeLinecap="round" />
@@ -78,15 +72,6 @@ const BambooBackground = () => (
   </div>
 );
 
-const Navbar = () => (
-  <header className="absolute top-0 left-0 w-full flex items-center justify-between px-4 md:px-12 py-6 z-50 bg-gradient-to-b from-[#1A1C1F]/80 to-transparent">
-    <Logo className="cursor-pointer" />
-    <div className="flex items-center">
-      <div className="w-10 h-10 rounded-full bg-[#C02F12] border-2 border-[#FAEBD7] cursor-pointer shadow-lg shadow-[#C02F12]/20 hover:scale-105 transition-transform duration-200"></div>
-    </div>
-  </header>
-);
-
 const SectionHeader = ({ title }) => (
   <div className="flex items-center gap-3 mb-6">
     <span className="w-1.5 h-6 bg-[#C02F12] rounded-full"></span>
@@ -101,6 +86,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#1A1C1F] text-[#FAEBD7] font-sans selection:bg-[#C02F12] selection:text-[#FFFFFF] relative overflow-x-hidden w-full">
+      {/* CRITICAL: Inline Tailwind CDN and styles to prevent "white background/pure text" 
+          if the external layout.css or tailwind build fails.
+      */}
+      <script src="https://cdn.tailwindcss.com"></script>
       <style>{`
         @keyframes bamboo-sway {
           0% { transform: rotate(-1.5deg); }
@@ -116,15 +105,28 @@ export default function App() {
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(250, 235, 215, 0.05); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #C02F12; border-radius: 10px; }
         
-        .font-serif {
-            font-family: 'Playfair Display', serif;
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Fail-safe background if Tailwind fails */
+        body, html { 
+          background-color: #1A1C1F !important; 
+          margin: 0; 
+          padding: 0;
+          color: #FAEBD7;
         }
       `}</style>
       
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
 
       <BambooBackground />
-      <Navbar />
+      
+      {/* Navbar */}
+      <header className="absolute top-0 left-0 w-full flex items-center justify-between px-4 md:px-12 py-6 z-50 bg-gradient-to-b from-[#1A1C1F]/80 to-transparent">
+        <Logo className="cursor-pointer" />
+        <div className="flex items-center">
+          <div className="w-10 h-10 rounded-full bg-[#C02F12] border-2 border-[#FAEBD7] cursor-pointer shadow-lg shadow-[#C02F12]/20 hover:scale-105 transition-transform duration-200"></div>
+        </div>
+      </header>
 
       <div className="relative z-10 flex flex-col min-h-screen w-full">
         
