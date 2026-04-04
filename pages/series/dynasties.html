@@ -13,6 +13,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
     
     <style>
+        /* layout.css */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+
+body { 
+    margin: 0; 
+    padding: 0; 
+    background: #0a0a0b; /* Deep black base */
+    color: #FAEBD7; 
+    font-family: 'Cinzel', serif; 
+    overflow-x: hidden;
+    position: relative; /* Required for the pattern overlay */
+}
+
+/* THE PATTERN LAYER */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    /* Update this path to your bamboo/japanese pattern file */
+    background-image: url('/media/patterns/japanese_pattern.png'); 
+    background-repeat: repeat;
+    background-size: 300px; /* Adjust scale of the pattern */
+    opacity: 0.05; /* Control the subtlety here (5% opacity) */
+    z-index: -1; /* Keep it behind everything */
+    pointer-events: none;
+}
+
+.font-serif { 
+    font-family: 'Cinzel', serif; 
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Standardized Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #0a0a0b; }
+::-webkit-scrollbar-thumb { 
+    background: #C02F12; 
+    border-radius: 10px; 
+}
         body { 
             background-color: #0a0a0b !important; 
             color: #f0f0f0;
