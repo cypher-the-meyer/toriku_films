@@ -44,7 +44,11 @@
             animation: bamboo-sway 6s ease-in-out infinite alternate;
         }
         
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        /* Hide default scrollbars for the row */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px;}
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(250, 235, 215, 0.05); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #C02F12; border-radius: 10px; }
         
@@ -73,9 +77,28 @@
                 { id: 4, num: "04", title: "The Blood Seal", duration: "23:58" },
                 { id: 5, num: "05", title: "Sovereign Debt", duration: "24:05" },
                 { id: 6, num: "06", title: "Horizon Ablaze", duration: "24:00" },
+                { id: 7, num: "07", title: "Silent Descent", duration: "22:50" },
+                { id: 8, num: "08", title: "Chains of Aether", duration: "25:10" },
             ]
         };
 
+        // NEW: Multiple Small Screenshot Thumbnails
+        const SCREENSHOTS = [
+            { id: 1, url: "https://images.unsplash.com/photo-1599419139046-e5c9a9307c08?q=80&w=600", caption: "High Archon Soren" },
+            { id: 2, url: "https://images.unsplash.com/photo-1617396111389-b9818193a02f?q=80&w=600", caption: "Cockpit of the Valkyrie" },
+            { id: 3, url: "https://images.unsplash.com/photo-1549490313-097b6a65574c?q=80&w=600", caption: "Aether Pipeline" },
+            { id: 4, url: "https://images.unsplash.com/photo-1633519159021-d0076c8c49e7?q=80&w=600", caption: "The Blood Seal Chamber" },
+            { id: 5, url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600", caption: "Wasteland Outpost" },
+            { id: 6, url: "https://images.unsplash.com/photo-1532003885409-ed84d334f6cc?q=80&w=600", caption: "Neon Market District" },
+            { id: 7, url: "https://images.unsplash.com/photo-1535402803947-a950d7f7c4a1?q=80&w=600", caption: "Sovereign Fleet" },
+            { id: 8, url: "https://images.unsplash.com/photo-1612033448550-9d6f9c17f07d?q=80&w=600", caption: "Oracle Elara's Vision" },
+            { id: 9, url: "https://images.unsplash.com/photo-1517511620798-cec17d428bc0?q=80&w=600", caption: "Ancient Ruins Access" },
+            { id: 10, url: "https://images.unsplash.com/photo-1521747116042-5a810fda9664?q=80&w=600", caption: "The Iron Pact" },
+            { id: 11, url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600", caption: "Diplomatic Envoy Voss" },
+            { id: 12, url: "https://images.unsplash.com/photo-1581091215367-9b6c00b3035a?q=80&w=600", caption: "Hyper-Tech Lab" },
+        ];
+
+        // Existing Cinematic Carousel (Large Images)
         const GALLERY = [
             { id: 1, url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600", caption: "The Inner Sanctum" },
             { id: 2, url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600", caption: "Neon Wastelands" },
@@ -98,13 +121,71 @@
             </div>
         );
 
+        // NEW: Small Screenshot Preview Row Slideshow
+        const ScreenshotPreviewRow = () => {
+            const scrollRef = React.useRef(null);
+
+            const scroll = (direction) => {
+                if (scrollRef.current) {
+                    const scrollAmount = 400; // Adjust for scroll distance
+                    if (direction === 'left') {
+                        scrollRef.current.scrollLeft -= scrollAmount;
+                    } else {
+                        scrollRef.current.scrollLeft += scrollAmount;
+                    }
+                }
+            };
+
+            return (
+                <section className="mb-32 relative group">
+                    <SectionHeader title="Visual Codex" />
+                    
+                    {/* Compact Controls */}
+                    <div className="absolute inset-y-0 -left-6 flex items-center z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => scroll('left')} className="p-3 bg-black/50 backdrop-blur-md rounded-full text-white/50 hover:bg-[#C02F12] hover:text-white transition-all">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+                    </div>
+                    <div className="absolute inset-y-0 -right-6 flex items-center z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => scroll('right')} className="p-3 bg-black/50 backdrop-blur-md rounded-full text-white/50 hover:bg-[#C02F12] hover:text-white transition-all">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                    </div>
+
+                    {/* Scrollable Row */}
+                    <div 
+                        ref={scrollRef} 
+                        className="flex gap-4 overflow-x-hidden scroll-smooth pb-4 custom-scrollbar"
+                    >
+                        {SCREENSHOTS.map((shot) => (
+                            <div key={shot.id} className="flex-none w-52 group/item">
+                                <div className="aspect-[16/10] h-32 rounded-xl overflow-hidden border border-white/10 group-hover/item:border-[#C02F12] transition-colors bg-white/5 backdrop-blur-sm relative">
+                                    <img 
+                                        src={shot.url} 
+                                        alt={shot.caption} 
+                                        className="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover/item:scale-110 group-hover/item:opacity-100" 
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent group-hover/item:from-black/90"></div>
+                                </div>
+                                <div className="pt-2 px-2 text-center">
+                                    <p className="text-white text-[11px] font-medium leading-tight group-hover/item:text-white transition-colors">{shot.caption}</p>
+                                    <p className="text-[#C02F12] text-[8px] uppercase font-bold tracking-widest mt-1 opacity-60">Dynasties S1</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // Existing Full-Width Gallery Carousel (Cinematic)
         const GalleryCarousel = () => {
             const [currentIndex, setCurrentIndex] = React.useState(0);
 
             React.useEffect(() => {
                 const timer = setInterval(() => {
                     setCurrentIndex((prev) => (prev + 1) % GALLERY.length);
-                }, 5000);
+                }, 7000); // 7 seconds per slide
                 return () => clearInterval(timer);
             }, []);
 
@@ -115,11 +196,11 @@
                             key={img.id}
                             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentIndex ? 'opacity-100' : 'opacity-0'}`}
                         >
-                            <img src={img.url} alt={img.caption} className="w-full h-full object-cover opacity-60 transform scale-105 group-hover:scale-100 transition-transform duration-[10s]" />
+                            <img src={img.url} alt={img.caption} className="w-full h-full object-cover opacity-60 transform scale-105 group-hover:scale-100 transition-transform duration-[15s]" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                             <div className="absolute bottom-10 left-10">
                                 <p className="text-[#C02F12] font-mono text-[10px] uppercase tracking-widest mb-2">Visual Archive</p>
-                                <h3 className="text-white text-3xl font-serif italic">{img.caption}</h3>
+                                <h3 className="text-white text-4xl font-serif italic">{img.caption}</h3>
                             </div>
                         </div>
                     ))}
@@ -129,7 +210,7 @@
                             <button 
                                 key={idx}
                                 onClick={() => setCurrentIndex(idx)}
-                                className={`h-1 transition-all duration-500 rounded-full ${idx === currentIndex ? 'w-8 bg-[#C02F12]' : 'w-2 bg-white/20'}`}
+                                className={`h-1 transition-all duration-500 rounded-full ${idx === currentIndex ? 'w-12 bg-[#C02F12]' : 'w-2 bg-white/20'}`}
                             />
                         ))}
                     </div>
@@ -156,14 +237,15 @@
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0b] via-transparent to-transparent"></div>
                         <div className="absolute bottom-12 left-8 md:left-24 z-10">
                             <div className="flex items-center gap-3 mb-4">
-                                <span className="bg-[#C02F12] text-white text-[10px] font-bold px-2 py-1 rounded uppercase">2026 Release</span>
+                                <span className="bg-[#C02F12] text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-wider">2026 Release</span>
                                 <span className="text-white/60 text-sm font-medium">{SERIES_DETAILS.genre}</span>
                             </div>
-                            <h1 className="text-6xl md:text-9xl font-serif font-bold text-white tracking-tighter">{SERIES_DETAILS.title}</h1>
+                            <h1 className="text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter">{SERIES_DETAILS.title}</h1>
                         </div>
                     </div>
 
                     <main className="max-w-7xl mx-auto px-8 py-20">
+                        
                         {/* 1. NARRATIVE GRID (The 2-column container) */}
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-32">
                             <div className="lg:col-span-5 bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md">
@@ -176,7 +258,7 @@
                                         <div key={chapter.id} className="group flex items-center justify-between p-4 rounded-xl hover:bg-[#C02F12]/10 transition-all cursor-pointer">
                                             <div className="flex items-center gap-4">
                                                 <span className="text-[#C02F12] font-mono text-xs opacity-50">{chapter.num}</span>
-                                                <span className="text-white/90 text-sm font-medium">{chapter.title}</span>
+                                                <span className="text-white/90 text-sm font-medium group-hover:text-white transition-colors">{chapter.title}</span>
                                             </div>
                                             <span className="text-white/30 text-[10px] font-mono">{chapter.duration}</span>
                                         </div>
@@ -190,37 +272,41 @@
                                     {SERIES_DETAILS.description}
                                 </p>
                                 <div className="flex gap-6">
-                                    <button className="px-10 py-4 bg-[#C02F12] text-white font-black text-xs uppercase tracking-[0.2em] rounded-full hover:scale-105 transition-all">
+                                    <button className="px-10 py-4 bg-[#C02F12] text-white font-black text-xs uppercase tracking-[0.2em] rounded-full hover:scale-105 hover:bg-white hover:text-black transition-all">
                                         Enter Realm
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 2. SLIDESHOW ROW (Added here: Below two columns, Above cast) */}
+                        {/* 2. PLACEMENT: Small Screenshot Preview Row Slideshow (New) */}
+                        <ScreenshotPreviewRow />
+
+                        {/* 3. PLACEMENT: Existing Cinematic Gallery Carousel */}
                         <section className="mb-32">
                             <SectionHeader title="Visual Scenarios" />
                             <GalleryCarousel />
                         </section>
 
-                        {/* 3. CAST SECTION */}
+                        {/* 4. CAST SECTION */}
                         <section className="mb-32">
                             <SectionHeader title="The Council" />
                             <div className="flex flex-wrap gap-8 md:gap-12">
                                 {CAST.map((person) => (
-                                    <div key={person.id} className="group text-center">
-                                        <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 mb-4 overflow-hidden group-hover:border-[#C02F12] transition-all flex items-center justify-center">
-                                            <span className="text-white/10 text-4xl font-serif group-hover:text-[#C02F12]/40 transition-all">{person.name.charAt(0)}</span>
+                                    <div key={person.id} className="group text-center flex-none">
+                                        <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 mb-4 overflow-hidden group-hover:border-[#C02F12] transition-all flex items-center justify-center relative">
+                                            <div className="absolute inset-0 bg-[#C02F12]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            <span className="text-white/10 text-4xl font-serif group-hover:text-[#C02F12]/60 transition-all">{person.name.charAt(0)}</span>
                                         </div>
-                                        <h4 className="text-white text-sm font-bold">{person.name}</h4>
-                                        <p className="text-[#C02F12] text-[10px] uppercase font-black tracking-widest">{person.role}</p>
+                                        <h4 className="text-white text-sm font-bold group-hover:text-[#C02F12] transition-colors">{person.name}</h4>
+                                        <p className="text-[#C02F12] text-[10px] uppercase font-black tracking-widest mt-1 opacity-60">{person.role}</p>
                                     </div>
                                 ))}
                             </div>
                         </section>
                     </main>
 
-                    <footer className="border-t border-white/5 py-12 px-8 text-center">
+                    <footer className="border-t border-white/5 py-12 px-8 text-center bg-black/50">
                         <p className="text-white/20 text-[10px] tracking-[0.4em] uppercase font-bold">
                             &copy; 2026 Toriku Films • Excellence in Narrative Animation
                         </p>
