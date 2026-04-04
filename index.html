@@ -1,179 +1,158 @@
-import React from 'react';
-
-// --- Series Data ---
-// Note: We use the provided image for Dynasties. 
-// For Serafin and Kyoto Noir, we use high-quality dark thematic placeholders.
-const SERIES_PORTALS = [
-  {
-    id: 'dynasties',
-    title: 'Dynasties',
-    subtitle: 'A Legacy of Steel and Shadow',
-    image: 'https://images.unsplash.com/photo-1533109721025-d1ae2ee8c9eb?auto=format&fit=crop&q=80&w=2000', 
-    path: '/pages/series/dynasties.html',
-    tags: ['Action', 'Historical', 'Epic'],
-    label: 'New Release',
-    kanji: '朝'
-  },
-  {
-    id: 'serafin',
-    title: 'Serafin',
-    subtitle: 'The Last Angel of the Void',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2000',
-    path: '#',
-    tags: ['Dark Fantasy', 'Mystery'],
-    label: 'Coming Soon',
-    kanji: '天'
-  },
-  {
-    id: 'kyoto-noir',
-    title: 'Kyoto Noir',
-    subtitle: 'Rain Slicks and Neon Blades',
-    image: 'https://images.unsplash.com/photo-1545156521-77bd85671d30?auto=format&fit=crop&q=80&w=2000',
-    path: '#',
-    tags: ['Cyberpunk', 'Thriller'],
-    label: 'Trending',
-    kanji: '闇'
-  }
-];
-
-const PortalRow = ({ series }) => {
-  const handleClick = () => {
-    if (series.path !== '#') {
-      // In this environment, we simulate the navigation
-      console.log(`Navigating to: ${series.path}`);
-      window.location.href = series.path;
-    }
-  };
-
-  return (
-    <div 
-      onClick={handleClick}
-      className="group relative w-full h-[33.33vh] overflow-hidden cursor-pointer border-b border-[#FAEBD7]/10 bg-[#1A1C1F]"
-    >
-      {/* Background Image with Slow Zoom on Hover */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-110"
-        style={{ backgroundImage: `url(${series.image})` }}
-      />
-      
-      {/* Cinematic Overlays */}
-      {/* 1. Base Darkening */}
-      <div className="absolute inset-0 bg-[#1A1C1F]/50 group-hover:bg-[#1A1C1F]/20 transition-colors duration-700" />
-      {/* 2. Left-to-Right Gradient for Text Readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1A1C1F] via-[#1A1C1F]/40 to-transparent" />
-      {/* 3. Bottom Vignette */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1A1C1F]/80 via-transparent to-transparent" />
-      
-      {/* Content Layer */}
-      <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-20 z-20">
-        <div className="flex items-center gap-4 mb-3 transform translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out">
-          <span className="bg-[#C02F12] text-white text-[10px] md:text-xs font-black px-3 py-1 rounded-sm tracking-[0.2em] uppercase shadow-lg shadow-[#C02F12]/20">
-            {series.label}
-          </span>
-          <div className="flex gap-3">
-            {series.tags.map(tag => (
-              <span key={tag} className="text-[#FAEBD7]/50 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] border-l border-[#FAEBD7]/20 pl-3">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-        
-        <h2 className="text-6xl md:text-8xl font-serif font-black text-[#FAEBD7] mb-2 tracking-tighter transition-all duration-700 group-hover:text-white group-hover:translate-x-2">
-          {series.title}
-        </h2>
-        
-        <p className="text-[#FAEBD7]/70 text-sm md:text-xl font-light tracking-wide max-w-xl transform translate-y-4 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 leading-relaxed">
-          {series.subtitle}
-        </p>
-      </div>
-
-      {/* Atmospheric Kanji Background Element */}
-      <div className="absolute right-10 md:right-24 top-1/2 -translate-y-1/2 opacity-[0.03] group-hover:opacity-[0.08] pointer-events-none transition-all duration-1000 select-none">
-        <span className="text-[20rem] md:text-[30rem] font-serif font-bold text-[#FAEBD7] leading-none">
-          {series.kanji}
-        </span>
-      </div>
-
-      {/* Animated Call-to-Action Arrow */}
-      <div className="absolute right-12 bottom-12 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
-        <div className="flex items-center gap-4 text-[#C02F12]">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em]">Enter Realm</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default function App() {
-  return (
-    <div className="min-h-screen bg-[#1A1C1F] overflow-hidden w-full flex flex-col selection:bg-[#C02F12] selection:text-white">
-      <style>{`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toriku Films | Official Home</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
-        
-        body {
-          margin: 0;
-          padding: 0;
-          background: #1A1C1F;
+        body { margin: 0; padding: 0; background: #1A1C1F; color: #FAEBD7; overflow: hidden; font-family: 'Cinzel', serif; }
+        .font-serif { font-family: 'Cinzel', serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const SERIES_PORTALS = [
+            {
+                id: 'dynasties',
+                title: 'Dynasties',
+                subtitle: 'A Legacy of Steel and Shadow',
+                image: 'https://images.unsplash.com/photo-1533109721025-d1ae2ee8c9eb?auto=format&fit=crop&q=80&w=2000', 
+                path: '/pages/series/dynasties.html',
+                tags: ['Action', 'Historical', 'Epic'],
+                label: 'New Release',
+                kanji: '朝'
+            },
+            {
+                id: 'serafin',
+                title: 'Serafin',
+                subtitle: 'The Last Angel of the Void',
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2000',
+                path: '#',
+                tags: ['Dark Fantasy', 'Mystery'],
+                label: 'Coming Soon',
+                kanji: '天'
+            },
+            {
+                id: 'kyoto-noir',
+                title: 'Kyoto Noir',
+                subtitle: 'Rain Slicks and Neon Blades',
+                image: 'https://images.unsplash.com/photo-1545156521-77bd85671d30?auto=format&fit=crop&q=80&w=2000',
+                path: '#',
+                tags: ['Cyberpunk', 'Thriller'],
+                label: 'Trending',
+                kanji: '闇'
+            }
+        ];
+
+        const PortalRow = ({ series }) => {
+            const handleClick = () => {
+                if (series.path !== '#') {
+                    window.location.href = series.path;
+                }
+            };
+
+            return (
+                <div 
+                    onClick={handleClick}
+                    className="group relative w-full h-[33.33vh] overflow-hidden cursor-pointer border-b border-[#FAEBD7]/10 bg-[#1A1C1F]"
+                >
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-110"
+                        style={{ backgroundImage: `url(${series.image})` }}
+                    />
+                    <div className="absolute inset-0 bg-[#1A1C1F]/50 group-hover:bg-[#1A1C1F]/20 transition-colors duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#1A1C1F] via-[#1A1C1F]/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1A1C1F]/80 via-transparent to-transparent" />
+                    
+                    <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-20 z-20">
+                        <div className="flex items-center gap-4 mb-3 transform translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out">
+                            <span className="bg-[#C02F12] text-white text-[10px] md:text-xs font-black px-3 py-1 rounded-sm tracking-[0.2em] uppercase">
+                                {series.label}
+                            </span>
+                            <div className="flex gap-3">
+                                {series.tags.map(tag => (
+                                    <span key={tag} className="text-[#FAEBD7]/50 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] border-l border-[#FAEBD7]/20 pl-3">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <h2 className="text-5xl md:text-8xl font-black text-[#FAEBD7] mb-2 tracking-tighter transition-all duration-700 group-hover:text-white group-hover:translate-x-2">
+                            {series.title}
+                        </h2>
+                        <p className="text-[#FAEBD7]/70 text-sm md:text-xl font-light tracking-wide max-w-xl transform translate-y-4 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 leading-relaxed">
+                            {series.subtitle}
+                        </p>
+                    </div>
+
+                    <div className="absolute right-10 md:right-24 top-1/2 -translate-y-1/2 opacity-[0.03] group-hover:opacity-[0.08] pointer-events-none transition-all duration-1000 select-none">
+                        <span className="text-[20rem] md:text-[30rem] font-bold text-[#FAEBD7] leading-none">
+                            {series.kanji}
+                        </span>
+                    </div>
+
+                    <div className="absolute right-12 bottom-12 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
+                        <div className="flex items-center gap-4 text-[#C02F12]">
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Enter Realm</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        function App() {
+            return (
+                <div className="min-h-screen bg-[#1A1C1F] overflow-hidden w-full flex flex-col selection:bg-[#C02F12] selection:text-white">
+                    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-gradient-to-b from-[#1A1C1F] via-[#1A1C1F]/60 to-transparent">
+                        <div className="flex items-center gap-4 group cursor-pointer">
+                            <div className="w-10 h-10 bg-[#C02F12] rounded-full flex items-center justify-center shadow-lg shadow-[#C02F12]/30 group-hover:scale-110 transition-transform">
+                                <span className="text-[#FAEBD7] font-black text-xl">T</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[#FAEBD7] font-black tracking-[0.3em] uppercase text-sm leading-none">Toriku Films</span>
+                                <span className="text-[#C02F12] text-[8px] font-black tracking-[0.5em] uppercase mt-1">Studio Selection</span>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main className="flex-1 flex flex-col h-screen">
+                        {SERIES_PORTALS.map(series => (
+                            <PortalRow key={series.id} series={series} />
+                        ))}
+                    </main>
+
+                    <footer className="fixed bottom-0 left-0 w-full z-50 px-8 py-4 pointer-events-none flex justify-between items-end">
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <span className="text-[#FAEBD7]/30 text-[10px] uppercase font-black tracking-widest">Server Online</span>
+                            </div>
+                        </div>
+                        <div className="pointer-events-auto">
+                           <span className="text-[#FAEBD7]/20 text-[10px] uppercase tracking-widest font-black">&copy; Toriku Production House</span>
+                        </div>
+                    </footer>
+                </div>
+            );
         }
 
-        .font-serif { 
-          font-family: 'Cinzel', serif; 
-        }
-
-        /* Prevents potential lateral scrolling from oversized kanji */
-        main {
-          overflow: hidden;
-        }
-      `}</style>
-
-      {/* High-Z Navbar */}
-      <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-gradient-to-b from-[#1A1C1F] via-[#1A1C1F]/60 to-transparent">
-        <div className="flex items-center gap-4 group cursor-pointer">
-          <div className="w-10 h-10 bg-[#C02F12] rounded-full flex items-center justify-center shadow-lg shadow-[#C02F12]/30 group-hover:scale-110 transition-transform">
-            <span className="text-[#FAEBD7] font-serif font-black text-xl">T</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[#FAEBD7] font-serif font-black tracking-[0.3em] uppercase text-sm leading-none">Toriku Films</span>
-            <span className="text-[#C02F12] text-[8px] font-black tracking-[0.5em] uppercase mt-1">Studio Selection</span>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-6">
-          <div className="w-10 h-10 rounded-full border border-[#FAEBD7]/10 flex items-center justify-center cursor-pointer hover:bg-[#FAEBD7]/5 hover:border-[#FAEBD7]/30 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAEBD7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-               <line x1="4" y1="12" x2="20" y2="12"></line>
-               <line x1="4" y1="6" x2="20" y2="6"></line>
-               <line x1="4" y1="18" x2="20" y2="18"></line>
-            </svg>
-          </div>
-        </div>
-      </nav>
-
-      {/* Vertical Portal Stacking */}
-      <main className="flex-1 flex flex-col h-screen">
-        {SERIES_PORTALS.map(series => (
-          <PortalRow key={series.id} series={series} />
-        ))}
-      </main>
-
-      {/* Floating Status / Footer Info */}
-      <footer className="fixed bottom-0 left-0 w-full z-50 px-8 py-4 pointer-events-none flex justify-between items-end">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-[#FAEBD7]/30 text-[10px] uppercase font-black tracking-widest">Server Online</span>
-          </div>
-          <span className="text-[#FAEBD7]/10 text-[8px] uppercase tracking-[0.4em] font-black italic">Archive / Tokyo / 2026</span>
-        </div>
-        <div className="pointer-events-auto">
-           <span className="text-[#FAEBD7]/20 text-[10px] uppercase tracking-widest font-black">&copy; Toriku Production House</span>
-        </div>
-      </footer>
-    </div>
-  );
-}
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
