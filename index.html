@@ -87,7 +87,30 @@
             <div class="line"></div>
         </div>
     </header>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toriku Films | Ghost Samurai</title>
+    
+    <link rel="stylesheet" href="layout.css" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+      /* Ensure the body takes up full height to prevent flickering during React mount */
+      body {
+        margin: 0;
+        background-color: #1A1C1F;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
 
+    <script type="module" src="/src/index.js"></script>
+  </body>
     <!-- Full-Screen Menu Overlay -->
     <div id="menu-overlay" class="fixed inset-0 bg-gray-900/95 flex flex-col justify-center items-center z-30 transition-opacity duration-500 opacity-0 pointer-events-none">
         <nav class="space-y-6 text-center">
